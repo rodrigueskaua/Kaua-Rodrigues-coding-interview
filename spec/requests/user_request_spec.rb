@@ -29,10 +29,17 @@ RSpec.describe 'Users', type: :request do
       end
     end
 
-    context 'when fetching all users' do
-      include_context 'with multiple companies'
+    context 'when filtering by username' do
+      let!(:company_1) { create(:company) }
+      let!(:company_2) { create(:company) }
+      let!(:user_1) { create(:user, username: 'user1', company: company_1) }
+      let!(:user_2) { create(:user, username: 'user2', company: company_2) }
+      let!(:user_3) { create(:user, username: 'usuaio3', company: company_2) }
 
-      it 'returns all the users' do
+      it 'return parcial matching on filtering by username' do
+        get '/users', params: {username: 'user'}
+        
+        expect(result.size).to eq(2)
       end
     end
   end
